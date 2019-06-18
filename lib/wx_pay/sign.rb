@@ -6,7 +6,7 @@ module WxPay
     SIGN_TYPE_MD5 = 'MD5'
     SIGN_TYPE_HMAC_SHA256 = 'HMAC-SHA256'
 
-    def self.generate(params, sign_type = SIGN_TYPE_MD5)
+    def self.generate(params, sign_type = SIGN_TYPE_HMAC_SHA256)
       key = params.delete(:key)
 
       new_key = params["key"] #after
