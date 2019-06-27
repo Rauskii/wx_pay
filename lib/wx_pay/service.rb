@@ -308,6 +308,9 @@ module WxPay
 
       check_required_options(params, DOWNLOAD_TRANSACTION_HISTORY)
 
+      # Convert bill_date to appropriate format
+      params[:bill_date] = params[:bill_date].to_date.strftime('%Y%m%d')
+
       options = {
         ssl_client_cert: options.delete(:apiclient_cert) || WxPay.apiclient_cert,
         ssl_client_key: options.delete(:apiclient_key) || WxPay.apiclient_key,
