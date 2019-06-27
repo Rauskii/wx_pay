@@ -302,7 +302,8 @@ module WxPay
       params = {
         appid: options.delete(:appid) || WxPay.appid,
         mch_id: options.delete(:mch_id) || WxPay.mch_id,
-        nonce_str: SecureRandom.uuid.tr('-', '')
+        nonce_str: SecureRandom.uuid.tr('-', ''),
+        bill_type: 'ALL' # Api document says this is optional but API response fails without it
       }.merge(params)
 
       check_required_options(params, DOWNLOAD_TRANSACTION_HISTORY)
