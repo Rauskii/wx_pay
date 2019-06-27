@@ -1,3 +1,4 @@
+require 'test_helper'
 
 class ServiceTest < MiniTest::Test
 

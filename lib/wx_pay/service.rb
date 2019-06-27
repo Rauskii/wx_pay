@@ -297,6 +297,33 @@ module WxPay
       r
     end
 
+    DOWNLOAD_TRANSACTION_HISTORY = [:bill_date]
+    def self.download_transaction_history(params, options = {})
+      params = {
+        appid: options.delete(:appid) || WxPay.appid,
+        mch_id: options.delete(:mch_id) || WxPay.mch_id,
+        nonce_str: SecureRandom.uuid.tr('-', ''),
+        bill_type: 'ALL' # Api document says this is optional but API response fails without it
+      }.merge(params)
+
+      check_required_options(params, DOWNLOAD_TRANSACTION_HISTORY)
+
+      # Convert bill_date to appropriate format
+      params[:bill_date] = params[:bill_date].to_date.strftime('%Y%m%d')
+
+      options = {
+        ssl_client_cert: options.delete(:apiclient_cert) || WxPay.apiclient_cert,
+        ssl_client_key: options.delete(:apiclient_key) || WxPay.apiclient_key,
+        verify_ssl: OpenSSL::SSL::VERIFY_NONE
+      }.merge(options)
+
+      r = WxPay::Result.new(Hash.from_xml(invoke_remote("/pay/downloadbill", make_payload(params), options)))
+
+      yield r if block_given?
+
+      r
+    end
+
     INVOKE_REVERSE_REQUIRED_FIELDS = [:out_trade_no]
     def self.invoke_reverse(params, options = {})
       params = {
