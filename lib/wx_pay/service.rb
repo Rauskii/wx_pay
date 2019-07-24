@@ -302,6 +302,7 @@ module WxPay
       params = {
         appid: options.delete(:appid) || WxPay.appid,
         mch_id: options.delete(:mch_id) || WxPay.mch_id,
+        key: options.delete(:key) || WxPay.key,
         nonce_str: SecureRandom.uuid.tr('-', ''),
         sign_type: WxPay::Sign::SIGN_TYPE_HMAC_SHA256,
         bill_type: 'ALL' # Api document says this is optional but API response fails without it
