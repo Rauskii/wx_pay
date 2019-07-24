@@ -303,6 +303,7 @@ module WxPay
         appid: options.delete(:appid) || WxPay.appid,
         mch_id: options.delete(:mch_id) || WxPay.mch_id,
         nonce_str: SecureRandom.uuid.tr('-', ''),
+        sign_type: WxPay::Sign::SIGN_TYPE_HMAC_SHA256,
         bill_type: 'ALL' # Api document says this is optional but API response fails without it
       }.merge(params)
 
@@ -317,7 +318,7 @@ module WxPay
         verify_ssl: OpenSSL::SSL::VERIFY_NONE
       }.merge(options)
 
-      r = WxPay::Result.new(Hash.from_xml(invoke_remote("/pay/downloadbill", make_payload(params), options)))
+      r = WxPay::Result.new(Hash.from_xml(invoke_remote("/pay/downloadbill", make_payload(params, WxPay::Sign::SIGN_TYPE_HMAC_SHA256), options)))
 
       yield r if block_given?
 
