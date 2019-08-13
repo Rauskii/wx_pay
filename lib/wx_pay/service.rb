@@ -319,7 +319,9 @@ module WxPay
         verify_ssl: OpenSSL::SSL::VERIFY_NONE
       }.merge(options)
 
-      r = WxPay::Result.new(Hash.from_xml(invoke_remote("/pay/downloadbill", make_payload(params, WxPay::Sign::SIGN_TYPE_HMAC_SHA256), options)))
+      raw_response = invoke_remote("/pay/downloadbill", make_payload(params, WxPay::Sign::SIGN_TYPE_HMAC_SHA256), options)
+      r = WxPay::Result.new(Hash.from_xml(raw_response)) if raw_response.to_s.start_with?('<xml>')
+      r = WxPay::Result.new(raw_response.to_s) if r.nil?
 
       yield r if block_given?
 
